@@ -23,7 +23,7 @@ class Instructor
     #[Assert\NotBlank]
     private string $lastName = '';
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
     private ?string $bio = null;
 
     #[ORM\Column(length: 255, nullable: true)]

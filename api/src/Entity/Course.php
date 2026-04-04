@@ -2,21 +2,23 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[ApiResource]
 #[ORM\Entity]
 class Course
 {
-    public const STATUS_DRAFT = 'draft';
-    public const STATUS_PUBLISHED = 'published';
-    public const STATUS_ARCHIVED = 'archived';
+    public const string STATUS_DRAFT = 'draft';
+    public const string STATUS_PUBLISHED = 'published';
+    public const string STATUS_ARCHIVED = 'archived';
 
-    public const LEVEL_BEGINNER = 'beginner';
-    public const LEVEL_INTERMEDIATE = 'intermediate';
-    public const LEVEL_ADVANCED = 'advanced';
+    public const string LEVEL_BEGINNER = 'beginner';
+    public const string LEVEL_INTERMEDIATE = 'intermediate';
+    public const string LEVEL_ADVANCED = 'advanced';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -28,7 +30,7 @@ class Course
     #[Assert\Length(min: 3, max: 255)]
     private string $title = '';
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
     #[Assert\NotBlank]
     private string $description = '';
 
@@ -61,7 +63,12 @@ class Course
     private ?Instructor $instructor = null;
 
     /** @var Collection<int, Module> */
-    #[ORM\OneToMany(targetEntity: Module::class, mappedBy: 'course', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(
+        targetEntity: Module::class,
+        mappedBy: 'course',
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true,
+    )]
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $modules;
 

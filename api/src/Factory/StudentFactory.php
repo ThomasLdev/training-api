@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Factory;
 
 use App\Entity\Student;
@@ -21,7 +23,7 @@ final class StudentFactory extends PersistentObjectFactory
     }
 
     #[\Override]
-    protected function defaults(): array|callable
+    protected function defaults(): array
     {
         return [
             'firstName' => self::faker()->firstName(),

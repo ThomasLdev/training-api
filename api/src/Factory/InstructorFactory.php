@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Factory;
 
 use App\Entity\Instructor;
@@ -10,7 +12,7 @@ use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
  */
 final class InstructorFactory extends PersistentObjectFactory
 {
-    private const SPECIALTIES = [
+    private const array SPECIALTIES = [
         'PHP & Symfony',
         'JavaScript & React',
         'DevOps & CI/CD',
@@ -34,7 +36,7 @@ final class InstructorFactory extends PersistentObjectFactory
     }
 
     #[\Override]
-    protected function defaults(): array|callable
+    protected function defaults(): array
     {
         return [
             'firstName' => self::faker()->firstName(),

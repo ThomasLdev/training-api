@@ -20,7 +20,7 @@ class Review
     #[Assert\Range(min: 1, max: 5)]
     private int $rating = 0;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 10)]
     private string $comment = '';

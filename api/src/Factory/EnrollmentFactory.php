@@ -23,13 +23,13 @@ final class EnrollmentFactory extends PersistentObjectFactory
     }
 
     #[\Override]
-    protected function defaults(): array|callable
+    protected function defaults(): array
     {
         $progress = self::faker()->numberBetween(0, 100);
 
         return [
-            'student' => lazy(fn () => StudentFactory::randomOrCreate()),
-            'course' => lazy(fn () => CourseFactory::randomOrCreate()),
+            'student' => lazy(fn (): object => StudentFactory::randomOrCreate()),
+            'course' => lazy(fn (): object => CourseFactory::randomOrCreate()),
             'progressPercent' => $progress,
             'finalGrade' => $progress === 100 ? self::faker()->randomFloat(1, 8, 20) : null,
             'status' => $progress === 100 ? Enrollment::STATUS_COMPLETED : Enrollment::STATUS_ACTIVE,

@@ -12,7 +12,7 @@ use function Zenstruck\Foundry\lazy;
  */
 final class CourseFactory extends PersistentObjectFactory
 {
-    private const SUBJECTS = [
+    private const array SUBJECTS = [
         'Symfony', 'API Platform', 'React', 'Vue.js', 'Docker', 'Kubernetes',
         'PostgreSQL', 'MongoDB', 'Redis', 'GraphQL', 'TypeScript', 'PHP 8',
         'Python', 'Machine Learning', 'DevOps', 'CI/CD', 'Sécurité web',
@@ -21,7 +21,7 @@ final class CourseFactory extends PersistentObjectFactory
         'RabbitMQ', 'Kafka', 'AWS', 'Terraform', 'Git avancé',
     ];
 
-    private const FORMATS = [
+    private const array FORMATS = [
         '%s pour les débutants',
         '%s : de zéro à la production',
         '%s avancé : guide complet',
@@ -43,12 +43,12 @@ final class CourseFactory extends PersistentObjectFactory
     }
 
     #[\Override]
-    protected function defaults(): array|callable
+    protected function defaults(): array
     {
         return [
             'title' => sprintf(
-                self::faker()->randomElement(self::FORMATS),
-                self::faker()->randomElement(self::SUBJECTS),
+                self::FORMATS[array_rand(self::FORMATS)],
+                self::SUBJECTS[array_rand(self::SUBJECTS)],
             ),
             'description' => self::faker()->paragraphs(3, true),
             'level' => self::faker()->randomElement([
@@ -59,8 +59,10 @@ final class CourseFactory extends PersistentObjectFactory
             'priceInCents' => self::faker()->randomElement([0, 1990, 2990, 4990, 7990, 9990, 14990]),
             'maxStudents' => self::faker()->numberBetween(10, 50),
             'status' => Course::STATUS_PUBLISHED,
-            'publishedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-1 year', '-1 month')),
-            'instructor' => lazy(fn () => InstructorFactory::randomOrCreate()),
+            'publishedAt' => \DateTimeImmutable::createFromMutable(
+                self::faker()->dateTimeBetween('-1 year', '-1 month'),
+            ),
+            'instructor' => lazy(fn (): object => InstructorFactory::randomOrCreate()),
         ];
     }
 

@@ -17,7 +17,7 @@ class Module
     #[Assert\NotBlank]
     private string $title = '';
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
     #[Assert\NotBlank]
     private string $content = '';
 
