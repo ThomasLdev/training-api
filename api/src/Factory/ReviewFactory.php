@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Factory;
 
 use App\Entity\Review;
@@ -23,13 +25,13 @@ final class ReviewFactory extends PersistentObjectFactory
     }
 
     #[\Override]
-    protected function defaults(): array|callable
+    protected function defaults(): array
     {
         return [
             'rating' => self::faker()->numberBetween(1, 5),
             'comment' => self::faker()->paragraphs(1, true),
-            'student' => lazy(fn () => StudentFactory::randomOrCreate()),
-            'course' => lazy(fn () => CourseFactory::randomOrCreate()),
+            'student' => lazy(fn (): object => StudentFactory::randomOrCreate()),
+            'course' => lazy(fn (): object => CourseFactory::randomOrCreate()),
         ];
     }
 

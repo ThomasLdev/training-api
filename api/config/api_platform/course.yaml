@@ -1,0 +1,20 @@
+resources:
+    App\Entity\Course:
+         normalizationContext:
+             groups: ['course:read']
+         denormalizationContext:
+             groups: ['course:write']
+         operations:
+             ApiPlatform\Metadata\GetCollection:
+                 normalizationContext:
+                     groups: ['course:list']
+             ApiPlatform\Metadata\Get: ~
+             ApiPlatform\Metadata\Post: ~
+             ApiPlatform\Metadata\Patch: ~
+             ApiPlatform\Metadata\Delete: ~
+properties:
+    App\Entity\Course:
+        id:
+            identifier: false
+        uuid:
+            identifier: true

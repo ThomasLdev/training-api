@@ -1,0 +1,23 @@
+resources:
+    App\Entity\Enrollment:
+        -   operations:
+                ApiPlatform\Metadata\Patch:
+                    denormalizationContext:
+                        groups: [ 'enrollment:update' ]
+
+        -   uriTemplate: /courses/{courseUuid}/enrollments
+            uriVariables:
+                courseUuid:
+                    fromClass: App\Entity\Course
+                    toProperty: course
+                    identifiers: [ uuid ]
+            operations:
+                ApiPlatform\Metadata\GetCollection:
+                    normalizationContext:
+                        groups: [ 'enrollment:list' ]
+properties:
+    App\Entity\Enrollment:
+        id:
+            identifier: false
+        uuid:
+            identifier: true

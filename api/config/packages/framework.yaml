@@ -12,6 +12,16 @@ framework:
 
     #esi: true
     #fragments: true
+    
+    serializer:
+        mapping:
+            paths:
+                - '%kernel.project_dir%/config/serialization'
+
+    validation:
+        mapping:
+            paths:
+                - '%kernel.project_dir%/config/validator'
 
 when@test:
     framework:

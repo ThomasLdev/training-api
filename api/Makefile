@@ -1,4 +1,4 @@
-.PHONY: help fixtures fixtures-reload migrate diff schema-validate cc
+.PHONY: help fixtures fixtures-reload migrate diff schema-validate cc phpstan phpcs rector rector-dry lint
 
 DC = docker compose
 PHP = $(DC) exec -e XDEBUG_MODE=off php
@@ -30,6 +30,25 @@ fixtures-reload: ## Purge database + load fixtures from scratch
 
 cc: ## Clear Symfony cache
 	$(CONSOLE) cache:clear
+
+## —— Quality —————————————————————————————————————
+
+phpstan: ## Run PHPStan (level max)
+	$(PHP) php -d memory_limit=512M vendor/bin/phpstan analyse
+
+phpcs: ## Run PHP_CodeSniffer (PSR-12)
+	$(PHP) vendor/bin/phpcs
+
+phpcs-fix: ## Auto-fix PHP_CodeSniffer violations
+	$(PHP) vendor/bin/phpcbf
+
+rector: ## Run Rector (apply fixes)
+	$(PHP) vendor/bin/rector process
+
+rector-dry: ## Run Rector in dry-run mode
+	$(PHP) vendor/bin/rector process --dry-run
+
+lint: phpcs phpstan ## Run all linters (phpcs + phpstan)
 
 ## —— Combo ———————————————————————————————————————
 

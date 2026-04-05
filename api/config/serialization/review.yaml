@@ -1,0 +1,12 @@
+App\Entity\Course:
+    attributes:
+        rating:
+            groups: [ 'review:list', 'review:read', 'review:write' ]
+        comment:
+            groups: [ 'review:list', 'review:read', 'review:write' ]
+        createdAt:
+            groups: [ 'review:list', 'review:read', 'review:write' ]
+        course:
+            groups: [ 'review:list', 'review:read', 'review:write' ]
+        student:
+            groups: [ 'review:list', 'review:read', 'review:write' ]

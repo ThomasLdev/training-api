@@ -1,0 +1,12 @@
+App\Entity\Student:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [email]
+    properties:
+        firstName:
+            - NotBlank: ~
+        lastName:
+            - NotBlank: ~
+        email:
+            - NotBlank: ~
+            - Email: ~

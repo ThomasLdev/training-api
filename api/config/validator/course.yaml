@@ -1,0 +1,19 @@
+App\Entity\Course:
+    properties:
+        title:
+            - NotBlank: ~
+            - Length: { min: 3, max: 255 }
+        description:
+            - NotBlank: ~
+        level:
+            - Choice:
+                choices: [beginner, intermediate, advanced]
+        priceInCents:
+            - PositiveOrZero: ~
+        maxStudents:
+            - Positive: ~
+        status:
+            - Choice:
+                choices: [draft, published, archived]
+        instructor:
+            - NotNull: ~
