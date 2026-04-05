@@ -1,0 +1,19 @@
+App\Entity\Enrollment:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [student, course]
+            message: 'This student is already enrolled in this course.'
+    properties:
+        student:
+            - NotNull: ~
+        course:
+            - NotNull: ~
+        progressPercent:
+            - Range: { min: 0, max: 100 }
+        finalGrade:
+            - Range: { min: 0, max: 20 }
+        status:
+            - Choice:
+                choices: [active, completed, cancelled]
+        paidPriceInCents:
+            - PositiveOrZero: ~

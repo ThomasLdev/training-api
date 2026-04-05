@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Uid\Uuid;
 
-#[ApiResource]
 #[ORM\Entity]
 class Course
 {
@@ -20,35 +19,32 @@ class Course
     public const string LEVEL_INTERMEDIATE = 'intermediate';
     public const string LEVEL_ADVANCED = 'advanced';
 
+    public const int MAX_LIST_EXCERPT_SIZE = 50;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(type: 'uuid', unique: true)]
+    private Uuid $uuid;
+
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 255)]
     private string $title = '';
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
-    #[Assert\NotBlank]
+    #[ORM\Column(type: Types::TEXT)]
     private string $description = '';
 
     #[ORM\Column(length: 20)]
-    #[Assert\Choice(choices: [self::LEVEL_BEGINNER, self::LEVEL_INTERMEDIATE, self::LEVEL_ADVANCED])]
     private string $level = self::LEVEL_BEGINNER;
 
-    /** Prix en centimes */
     #[ORM\Column]
-    #[Assert\PositiveOrZero]
     private int $priceInCents = 0;
 
     #[ORM\Column]
-    #[Assert\Positive]
     private int $maxStudents = 30;
 
     #[ORM\Column(length: 20)]
-    #[Assert\Choice(choices: [self::STATUS_DRAFT, self::STATUS_PUBLISHED, self::STATUS_ARCHIVED])]
     private string $status = self::STATUS_DRAFT;
 
     #[ORM\Column]
@@ -59,10 +55,9 @@ class Course
 
     #[ORM\ManyToOne(targetEntity: Instructor::class, inversedBy: 'courses')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotNull]
     private ?Instructor $instructor = null;
 
-    /** @var Collection<int, Module> */
+    /** @var Collection<int, Module> $modules */
     #[ORM\OneToMany(
         targetEntity: Module::class,
         mappedBy: 'course',
@@ -82,6 +77,7 @@ class Course
 
     public function __construct()
     {
+        $this->uuid = Uuid::v7();
         $this->createdAt = new \DateTimeImmutable();
         $this->modules = new ArrayCollection();
         $this->enrollments = new ArrayCollection();
@@ -91,6 +87,11 @@ class Course
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUuid(): Uuid
+    {
+        return $this->uuid;
     }
 
     public function getTitle(): string
@@ -261,6 +262,7 @@ class Course
         }
 
         $total = 0;
+
         foreach ($this->reviews as $review) {
             $total += $review->getRating();
         }
@@ -271,5 +273,14 @@ class Course
     public function getAvailableSpots(): int
     {
         return max(0, $this->maxStudents - $this->enrollments->count());
+    }
+
+    public function getExcerpt(): string
+    {
+        if (count_chars($this->description) <= self::MAX_LIST_EXCERPT_SIZE) {
+            return $this->description;
+        }
+
+        return mb_substr($this->description, 0, self::MAX_LIST_EXCERPT_SIZE, 'UTF-8') . '...';
     }
 }

@@ -1,0 +1,12 @@
+App\Entity\Enrollment:
+    attributes:
+        enrolledAt:
+            groups: [ 'enrollment:list' ]
+        finalGrade:
+            groups: [ 'enrollment:list' ]
+        status:
+            groups: [ 'enrollment:list' ]
+        paidFullPrice:
+            groups: [ 'enrollment:list' ]
+        student:
+            groups: [ 'enrollment:list' ]

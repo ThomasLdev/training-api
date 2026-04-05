@@ -1,0 +1,31 @@
+resources:
+    App\Entity\Module:
+        -   uriTemplate: /courses/{courseUuid}/modules
+            uriVariables:
+                courseUuid:
+                    fromClass: App\Entity\Course
+                    toProperty: course
+                    identifiers: [ uuid ]
+            normalizationContext:
+                groups: [ 'module:list' ]
+            denormalizationContext:
+                groups: [ 'module:write' ]
+            operations:
+                ApiPlatform\Metadata\GetCollection: ~
+                ApiPlatform\Metadata\Post: ~
+
+        -   uriTemplate: /courses/{courseUuid}/modules/{id}
+            uriVariables:
+                courseUuid:
+                    fromClass: App\Entity\Course
+                    toProperty: course
+                    identifiers: [ uuid ]
+                id:
+                    fromClass: App\Entity\Module
+                    identifiers: [ id ]
+            normalizationContext:
+                groups: [ 'module:read' ]
+            operations:
+                ApiPlatform\Metadata\Get: ~
+                ApiPlatform\Metadata\Patch: ~
+                ApiPlatform\Metadata\Delete: ~

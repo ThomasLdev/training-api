@@ -19,11 +19,27 @@ Instructor 1──N Course N──1 (via Enrollment) Student
 - **Enrollment** — inscription pivot (date, progression 0-100, note finale, statut)
 - **Review** — avis (note 1-5, commentaire, date)
 
+## Contexte d'exposition
+
+L'API alimente un frontend SPA (Next.js) et une future app mobile. Trois niveaux d'accès :
+
+| Ressource | Public (anonymous) | Authenticated (student/instructor) | Admin |
+|---|---|---|---|
+| Course | GET list, GET detail | idem | + POST, PATCH, DELETE |
+| Module | GET (via course) | idem | + POST, PATCH, DELETE |
+| Instructor | GET list, GET detail | idem | + POST, PATCH, DELETE |
+| Student | — | GET /me | CRUD complet |
+| Enrollment | — | POST, GET own, PATCH progress | GET all |
+| Review | GET (via course) | + POST, PATCH own, DELETE own | tout |
+
+Toute la configuration API Platform est en YAML dans `config/api_platform/` (un fichier par ressource).
+Les groupes de serialization sont en YAML dans `config/serialization/`.
+Les entités ne contiennent que Doctrine ORM + Validator.
+
 ## Plan de features à implémenter
 
 ### 0. Exposer les ressources (API Resource)
-- [ ] Déclarer `#[ApiResource]` sur chaque entité avec les bonnes opérations (CRUD complet ou restreint selon le contexte)
-- [ ] Choisir les opérations par ressource : Course (GET, POST, PATCH, DELETE), Module (CRUD via subresource), Enrollment (POST, GET, PATCH — pas de DELETE direct), Review (POST, GET, PATCH, DELETE), Student/Instructor (CRUD admin)
+- [ ] Déclarer les ressources en YAML (`config/api_platform/*.yaml`) avec les bonnes opérations selon la matrice d'accès ci-dessus
 - [ ] Configurer les `uriTemplate` custom : `/courses/{id}/modules`, `/courses/{id}/reviews`, `/courses/{id}/enroll`
 - [ ] Maîtriser `ApiProperty` : `readable`, `writable`, `identifier`, `description`
 - [ ] Gérer les relations : quand exposer un IRI vs un objet embarqué vs ne rien exposer
@@ -86,6 +102,18 @@ Instructor 1──N Course N──1 (via Enrollment) Student
 ### 11. OpenAPI & documentation
 - [ ] Enrichir doc OpenAPI avec exemples requêtes/réponses
 - [ ] Descriptions métier sur les opérations
+
+### 12. Cache & stratégies de caching
+- [ ] HTTP Cache headers par ressource : `Cache-Control`, `max-age`, `public`/`private` selon le rôle
+- [ ] ETags et `304 Not Modified` : éviter de re-sérialiser des données inchangées
+- [ ] Cache invalidation avec Caddy/Souin : tags automatiques API Platform, purge au write
+- [ ] Stratégie par ressource : cours publics (cache long, public), enrollments (private, short TTL), dashboard (no-cache)
+- [ ] Varnish/Souin comme reverse proxy cache devant FrankenPHP
+- [ ] Cache applicatif Symfony avec Redis : `cache.app` pour les résultats de requêtes lourdes (stats, agrégats)
+- [ ] Doctrine result cache sur Redis : cacher les requêtes fréquentes (liste de cours publiés, top reviews)
+- [ ] Shared invalidation : invalider le cache d'un cours quand une review/enrollment est créée (cross-resource tags)
+- [ ] Comprendre `Vary` header : cacher différemment selon `Accept`, `Authorization` (user-specific vs public)
+- [ ] Stale-while-revalidate : servir du cache périmé pendant le refresh en arrière-plan
 
 ## Stack technique
 

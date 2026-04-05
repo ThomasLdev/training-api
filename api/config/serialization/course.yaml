@@ -1,0 +1,26 @@
+App\Entity\Course:
+    attributes:
+        title:
+            groups: [ 'course:list', 'course:read', 'course:write' ]
+        description:
+            groups: [ 'course:read', 'course:write' ]
+        excerpt:
+            groups: [ 'course:list' ]
+        level:
+            groups: [ 'course:list', 'course:read', 'course:write' ]
+        priceInCents:
+            groups: [ 'course:list', 'course:read', 'course:write' ]
+        status:
+            groups: [ 'course:read' ]
+        createdAt:
+            groups: [ 'course:read' ]
+        instructor:
+            groups: [ 'course:list', 'course:read', 'course:write' ]
+        modules:
+            groups: [ 'course:read' ]
+        studentCount:
+            groups: [ 'course:read' ]
+        averageRating:
+            groups: [ 'course:read' ]
+        availableSpots:
+            groups: [ 'course:read' ]

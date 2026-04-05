@@ -1,0 +1,18 @@
+resources:
+    App\Entity\Instructor:
+         normalizationContext:
+             groups: ['instructor:read']
+         denormalizationContext:
+             groups: ['instructor:write']
+         operations:
+             ApiPlatform\Metadata\GetCollection: ~
+             ApiPlatform\Metadata\Get: ~
+             ApiPlatform\Metadata\Post: ~
+             ApiPlatform\Metadata\Patch: ~
+             ApiPlatform\Metadata\Delete: ~
+properties:
+    App\Entity\Instructor:
+        id:
+            identifier: false
+        uuid:
+            identifier: true

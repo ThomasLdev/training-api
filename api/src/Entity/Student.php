@@ -5,11 +5,9 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
-#[UniqueEntity('email')]
 class Student
 {
     #[ORM\Id]
@@ -17,17 +15,16 @@ class Student
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(type: 'uuid', unique: true)]
+    private Uuid $uuid;
+
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private string $firstName = '';
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private string $lastName = '';
 
     #[ORM\Column(length: 255, unique: true)]
-    #[Assert\NotBlank]
-    #[Assert\Email]
     private string $email = '';
 
     /** @var Collection<int, Enrollment> */
@@ -40,6 +37,7 @@ class Student
 
     public function __construct()
     {
+        $this->uuid = Uuid::v7();
         $this->enrollments = new ArrayCollection();
         $this->reviews = new ArrayCollection();
     }
@@ -47,6 +45,11 @@ class Student
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUuid(): Uuid
+    {
+        return $this->uuid;
     }
 
     public function getFirstName(): string

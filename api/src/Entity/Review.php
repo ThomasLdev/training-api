@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
 #[ORM\UniqueConstraint(name: 'unique_review', columns: ['student_id', 'course_id'])]
-#[UniqueEntity(fields: ['student', 'course'], message: 'You have already reviewed this course.')]
 class Review
 {
     #[ORM\Id]
@@ -16,13 +15,13 @@ class Review
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(type: 'uuid', unique: true)]
+    private Uuid $uuid;
+
     #[ORM\Column]
-    #[Assert\Range(min: 1, max: 5)]
     private int $rating = 0;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 10)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $comment = '';
 
     #[ORM\Column]
@@ -30,22 +29,26 @@ class Review
 
     #[ORM\ManyToOne(targetEntity: Course::class, inversedBy: 'reviews')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotNull]
     private ?Course $course = null;
 
     #[ORM\ManyToOne(targetEntity: Student::class, inversedBy: 'reviews')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotNull]
     private ?Student $student = null;
 
     public function __construct()
     {
+        $this->uuid = Uuid::v7();
         $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUuid(): Uuid
+    {
+        return $this->uuid;
     }
 
     public function getRating(): int

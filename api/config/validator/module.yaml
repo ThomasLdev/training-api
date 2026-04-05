@@ -1,0 +1,10 @@
+App\Entity\Module:
+    properties:
+        title:
+            - NotBlank: ~
+        content:
+            - NotBlank: ~
+        position:
+            - PositiveOrZero: ~
+        durationInMinutes:
+            - PositiveOrZero: ~

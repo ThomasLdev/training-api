@@ -4,8 +4,9 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
 class Instructor
@@ -15,15 +16,16 @@ class Instructor
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(type: 'uuid', unique: true)]
+    private Uuid $uuid;
+
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private string $firstName = '';
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private string $lastName = '';
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $bio = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -35,12 +37,18 @@ class Instructor
 
     public function __construct()
     {
+        $this->uuid = Uuid::v7();
         $this->courses = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUuid(): Uuid
+    {
+        return $this->uuid;
     }
 
     public function getFirstName(): string

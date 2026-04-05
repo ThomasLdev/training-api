@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 class Module
@@ -14,19 +14,15 @@ class Module
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
     private string $title = '';
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
-    #[Assert\NotBlank]
+    #[ORM\Column(type: Types::TEXT)]
     private string $content = '';
 
     #[ORM\Column]
-    #[Assert\PositiveOrZero]
     private int $position = 0;
 
     #[ORM\Column]
-    #[Assert\PositiveOrZero]
     private int $durationInMinutes = 0;
 
     #[ORM\ManyToOne(targetEntity: Course::class, inversedBy: 'modules')]

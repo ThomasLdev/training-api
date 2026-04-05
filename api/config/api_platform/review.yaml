@@ -1,0 +1,37 @@
+resources:
+    App\Entity\Review:
+        -   uriTemplate: /courses/{courseUuid}/reviews
+            uriVariables:
+                courseUuid:
+                    fromClass: App\Entity\Course
+                    toProperty: course
+                    identifiers: [ uuid ]
+            normalizationContext:
+                groups: [ 'review:list' ]
+            denormalizationContext:
+                groups: [ 'review:write' ]
+            operations:
+                ApiPlatform\Metadata\GetCollection: ~
+                ApiPlatform\Metadata\Post: ~
+
+        -   uriTemplate: /courses/{courseUuid}/reviews/{reviewUuid}
+            uriVariables:
+                courseUuid:
+                    fromClass: App\Entity\Course
+                    toProperty: course
+                    identifiers: [ uuid ]
+                reviewUuid:
+                    fromClass: App\Entity\Review
+                    identifiers: [ uuid ]
+            normalizationContext:
+                groups: [ 'review:read' ]
+            operations:
+                ApiPlatform\Metadata\Get: ~
+                ApiPlatform\Metadata\Patch: ~
+                ApiPlatform\Metadata\Delete: ~
+properties:
+    App\Entity\Review:
+        id:
+            identifier: false
+        uuid:
+            identifier: true

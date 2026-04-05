@@ -1,0 +1,10 @@
+App\Entity\Student:
+    attributes:
+        firstName:
+            groups: [ 'student:list', 'student:read', 'student:write' ]
+        lastName:
+            groups: [ 'student:list', 'student:read', 'student:write' ]
+        email:
+            groups: [ 'student:list', 'student:read', 'student:write' ]
+        enrollments:
+            groups: [ 'student:read', 'student:write' ]

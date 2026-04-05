@@ -1,0 +1,18 @@
+resources:
+    App\Entity\Student:
+         normalizationContext:
+             groups: ['student:read']
+         denormalizationContext:
+             groups: ['student:write']
+         operations:
+             ApiPlatform\Metadata\GetCollection: ~
+             ApiPlatform\Metadata\Get: ~
+             ApiPlatform\Metadata\Post: ~
+             ApiPlatform\Metadata\Patch: ~
+             ApiPlatform\Metadata\Delete: ~
+properties:
+    App\Entity\Student:
+        id:
+            identifier: false
+        uuid:
+            identifier: true

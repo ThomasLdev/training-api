@@ -1,0 +1,14 @@
+App\Entity\Module:
+    attributes:
+        id:
+            groups: [ 'module:list', 'module:read', 'course:read' ]
+        title:
+            groups: [ 'module:list', 'module:read', 'course:read' ]
+        position:
+            groups: [ 'module:list', 'module:read', 'course:read' ]
+        durationInMinutes:
+            groups: [ 'module:list', 'module:read', 'course:read' ]
+        content:
+            groups: [ 'module:read' ]
+            
+        
