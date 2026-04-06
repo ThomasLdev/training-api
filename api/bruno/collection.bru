@@ -1,0 +1,27 @@
+script:pre-request {
+  // Auto-inject JWT si disponible (sauf sur /auth/token)
+  const jwt = bru.getVar('jwt');
+  if (jwt && !req.getUrl().includes('/auth/token')) {
+    req.setHeader('Authorization', 'Bearer ' + jwt);
+  }
+}
+
+script:post-response {
+  // Auto-login si 401
+  if (res.status === 401) {
+    const email = bru.getEnvVar('loginEmail');
+    const password = bru.getEnvVar('loginPassword');
+    if (email && password) {
+      const baseUrl = bru.interpolate('{{baseUrl}}');
+      const loginRes = await fetch(baseUrl + '/auth/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await loginRes.json();
+      if (data.token) {
+        bru.setVar('jwt', data.token);
+      }
+    }
+  }
+}

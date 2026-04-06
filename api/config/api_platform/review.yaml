@@ -11,7 +11,10 @@ resources:
             denormalizationContext:
                 groups: [ 'review:write' ]
             operations:
-                ApiPlatform\Metadata\GetCollection: ~
+                ApiPlatform\Metadata\GetCollection:
+                    cacheHeaders:
+                        shared_max_age: 600
+                        max_age: 30
                 ApiPlatform\Metadata\Post: ~
 
         -   uriTemplate: /courses/{courseUuid}/reviews/{reviewUuid}
@@ -26,7 +29,10 @@ resources:
             normalizationContext:
                 groups: [ 'review:read' ]
             operations:
-                ApiPlatform\Metadata\Get: ~
+                ApiPlatform\Metadata\Get:
+                    cacheHeaders:
+                        shared_max_age: 600
+                        max_age: 30
                 ApiPlatform\Metadata\Patch: ~
                 ApiPlatform\Metadata\Delete: ~
 properties:

@@ -1,0 +1,32 @@
+meta {
+  name: 3 - Cross invalidation instructor
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/instructors/{{instructorUuid}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+  Accept: application/ld+json
+}
+
+body:json {
+  {
+    "first_name": "Cross invalidation test"
+  }
+}
+
+docs {
+  Exercise 3 test — cross invalidation:
+  1. GET /courses 2 times → verify the HIT
+  2. Run this request (PATCH an instructor, not a course)
+  3. GET /courses → HIT or MISS?
+
+  Answer: MISS, because the Cache-Tags of /courses contain
+  the IRIs of embedded instructors.
+}

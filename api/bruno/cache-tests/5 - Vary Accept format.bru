@@ -1,0 +1,24 @@
+meta {
+  name: 5 - Vary Accept format
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/courses
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+docs {
+  Exercise 6 test — Vary header:
+  1. GET /courses with Accept: application/ld+json → MISS then HIT
+  2. GET /courses with Accept: application/json (this request) → MISS or HIT?
+
+  Varnish stores separate variants by Vary header (here Accept).
+  Same URL, different format = different cache entry.
+}

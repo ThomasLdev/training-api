@@ -1,0 +1,29 @@
+meta {
+  name: 2 - Invalidation after PATCH
+  type: http
+  seq: 2
+}
+
+patch {
+  url: {{baseUrl}}/courses/{{courseUuid}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+  Accept: application/ld+json
+}
+
+body:json {
+  {
+    "title": "Cache invalidation test"
+  }
+}
+
+docs {
+  Invalidation scenario:
+  1. Run "1 - Cache MISS then HIT" 2 times → verify the HIT
+  2. Run this request (PATCH)
+  3. Re-run "1 - Cache MISS then HIT" → should be MISS (cache purged by BAN)
+}

@@ -1,8 +1,8 @@
 App\Entity\Instructor:
     attributes:
         firstName:
-            groups: [ 'instructor:list', 'instructor:read', 'instructor:write', 'course:read', 'course:list' ]
+            groups: [ 'instructor:list', 'instructor:read', 'instructor:write', 'course:read', 'me:read' ]
         lastName:
-            groups: [ 'instructor:list', 'instructor:read', 'instructor:write', 'course:read', 'course:list' ]
+            groups: [ 'instructor:list', 'instructor:read', 'instructor:write', 'course:read', 'me:read' ]
         specialty:
-            groups: [ 'instructor:list', 'instructor:read', 'instructor:write', 'course:read', 'course:list' ]
+            groups: [ 'instructor:list', 'instructor:read', 'instructor:write', 'course:read', 'me:read' ]

@@ -27,6 +27,16 @@ doctrine:
         controller_resolver:
             auto_mapping: false
 
+when@dev:
+    doctrine:
+        orm:
+            query_cache_driver:
+                type: pool
+                pool: doctrine.system_cache_pool
+            result_cache_driver:
+                type: pool
+                pool: doctrine.result_cache_pool
+
 when@test:
     doctrine:
         dbal:

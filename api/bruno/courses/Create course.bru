@@ -1,0 +1,32 @@
+meta {
+  name: Create course
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/courses
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/ld+json
+  Accept: application/ld+json
+}
+
+body:json {
+  {
+    "title": "New test course",
+    "description": "Course description created via Bruno",
+    "level": "beginner",
+    "price_in_cents": 4990,
+    "max_students": 25,
+    "instructor": "/instructors/{{instructorUuid}}"
+  }
+}
+
+docs {
+  Creates a new course.
+  Should trigger Varnish cache invalidation on /courses (collection).
+}

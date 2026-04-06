@@ -1,0 +1,16 @@
+resources:
+    App\Entity\User:
+        operations:
+            ApiPlatform\Metadata\Get:
+                uriTemplate: /me
+                provider: App\State\MeProvider
+                normalizationContext:
+                    groups: ['me:read']
+                cacheHeaders:
+                    max_age: 60
+properties:
+    App\Entity\User:
+        id:
+            identifier: false
+        uuid:
+            identifier: true

@@ -1,0 +1,22 @@
+meta {
+  name: Update student
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/students/{{studentUuid}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+  Accept: application/ld+json
+}
+
+body:json {
+  {
+    "first_name": "New first name"
+  }
+}

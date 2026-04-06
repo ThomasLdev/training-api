@@ -1,0 +1,27 @@
+meta {
+  name: Update instructor
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/instructors/{{instructorUuid}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+  Accept: application/ld+json
+}
+
+body:json {
+  {
+    "first_name": "New first name"
+  }
+}
+
+docs {
+  Updating an instructor also invalidates the /courses cache
+  if that instructor is referenced in Cache-Tags (exercise 3).
+}

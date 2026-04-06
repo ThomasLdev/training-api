@@ -1,0 +1,24 @@
+meta {
+  name: Create student
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/students
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/ld+json
+  Accept: application/ld+json
+}
+
+body:json {
+  {
+    "first_name": "Jean",
+    "last_name": "Martin",
+    "email": "jean.martin@example.com"
+  }
+}

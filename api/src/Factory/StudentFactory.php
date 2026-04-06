@@ -25,10 +25,13 @@ final class StudentFactory extends PersistentObjectFactory
     #[\Override]
     protected function defaults(): array
     {
+        $email = self::faker()->unique()->safeEmail();
+
         return [
+            'user' => UserFactory::new()->student()->with(['email' => $email]),
             'firstName' => self::faker()->firstName(),
             'lastName' => self::faker()->lastName(),
-            'email' => self::faker()->unique()->safeEmail(),
+            'email' => $email,
         ];
     }
 

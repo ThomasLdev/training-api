@@ -1,0 +1,15 @@
+meta {
+  name: Get review
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/courses/{{courseUuid}}/reviews/{{reviewUuid}}
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/ld+json
+}

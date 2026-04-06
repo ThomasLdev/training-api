@@ -1,0 +1,21 @@
+meta {
+  name: List enrollments
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/courses/{{courseUuid}}/enrollments
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/ld+json
+}
+
+docs {
+  Private resource — expected cache:
+  Cache-Control: max-age=0, must-revalidate, private
+  X-Cache: always MISS (Varnish never stores private responses)
+}

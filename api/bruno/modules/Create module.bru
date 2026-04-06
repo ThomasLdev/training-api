@@ -1,0 +1,25 @@
+meta {
+  name: Create module
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/courses/{{courseUuid}}/modules
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/ld+json
+  Accept: application/ld+json
+}
+
+body:json {
+  {
+    "title": "New module",
+    "content": "Module content created via Bruno",
+    "position": 10,
+    "duration_in_minutes": 45
+  }
+}

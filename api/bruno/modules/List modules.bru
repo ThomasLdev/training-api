@@ -1,0 +1,15 @@
+meta {
+  name: List modules
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/courses/{{courseUuid}}/modules
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/ld+json
+}

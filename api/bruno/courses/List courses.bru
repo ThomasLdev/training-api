@@ -1,0 +1,22 @@
+meta {
+  name: List courses
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/courses
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/ld+json
+}
+
+docs {
+  Paginated list of courses.
+
+  1st call: 200 + the collection script saves the ETag
+  2nd call: If-None-Match automatically injected → 304 if unchanged
+}

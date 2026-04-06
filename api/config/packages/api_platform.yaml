@@ -1,12 +1,17 @@
 api_platform:
     title: Hello API Platform
     version: 1.0.0
-    # Mercure integration, remove if unwanted
     mercure:
         include_type: true
-    # Good defaults for REST APIs
     defaults:
         stateless: true
         cache_headers:
-            vary: ['Content-Type', 'Authorization', 'Origin']
-    name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
+            vary: ['Content-Type', 'Origin']
+            stale_while_revalidate: 60
+    name_converter: 'serializer.name_converter.camel_case_to_snake_case'
+
+    http_cache:
+        invalidation:
+            enabled: true
+            varnish_urls: ['%env(VARNISH_URL)%']
+            purger: 'api_platform.http_cache.purger.varnish.ban'
