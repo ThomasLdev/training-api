@@ -11,6 +11,7 @@ security:
             security: false
         main:
             lazy: true
+            stateless: true
             provider: users_in_memory
 
             # activate different ways to authenticate

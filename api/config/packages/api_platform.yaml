@@ -9,4 +9,14 @@ api_platform:
         stateless: true
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
-    name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
+    name_converter: 'serializer.name_converter.camel_case_to_snake_case'
+
+    # Invalidation du cache HTTP via Varnish.
+    # Quand une ressource est modifiée (POST, PATCH, DELETE),
+    # API Platform envoie automatiquement une requête BAN à Varnish
+    # pour purger les réponses qui contenaient cette ressource.
+    http_cache:
+        invalidation:
+            enabled: true
+            varnish_urls: ['%env(VARNISH_URL)%']
+            purger: 'api_platform.http_cache.purger.varnish.ban'

@@ -7,8 +7,9 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
 #[ORM\UniqueConstraint(name: 'unique_enrollment', columns: ['student_id', 'course_id'])]
-class Enrollment
+class Enrollment implements TimestampableInterface
 {
+    use TimestampableTrait;
     public const string STATUS_ACTIVE = 'active';
     public const string STATUS_COMPLETED = 'completed';
     public const string STATUS_CANCELLED = 'cancelled';

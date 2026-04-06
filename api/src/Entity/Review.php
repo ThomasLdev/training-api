@@ -8,8 +8,9 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
 #[ORM\UniqueConstraint(name: 'unique_review', columns: ['student_id', 'course_id'])]
-class Review
+class Review implements TimestampableInterface
 {
+    use TimestampableTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -24,9 +25,6 @@ class Review
     #[ORM\Column(type: Types::TEXT)]
     private string $comment = '';
 
-    #[ORM\Column]
-    private \DateTimeImmutable $createdAt;
-
     #[ORM\ManyToOne(targetEntity: Course::class, inversedBy: 'reviews')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Course $course = null;
@@ -38,7 +36,6 @@ class Review
     public function __construct()
     {
         $this->uuid = Uuid::v7();
-        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -71,11 +68,6 @@ class Review
     {
         $this->comment = $comment;
         return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
     }
 
     public function getCourse(): ?Course

@@ -9,8 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
-class Course
+class Course implements TimestampableInterface
 {
+    use TimestampableTrait;
     public const string STATUS_DRAFT = 'draft';
     public const string STATUS_PUBLISHED = 'published';
     public const string STATUS_ARCHIVED = 'archived';
@@ -47,9 +48,6 @@ class Course
     #[ORM\Column(length: 20)]
     private string $status = self::STATUS_DRAFT;
 
-    #[ORM\Column]
-    private \DateTimeImmutable $createdAt;
-
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $publishedAt = null;
 
@@ -78,7 +76,6 @@ class Course
     public function __construct()
     {
         $this->uuid = Uuid::v7();
-        $this->createdAt = new \DateTimeImmutable();
         $this->modules = new ArrayCollection();
         $this->enrollments = new ArrayCollection();
         $this->reviews = new ArrayCollection();
@@ -158,11 +155,6 @@ class Course
     {
         $this->status = $status;
         return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
     }
 
     public function getPublishedAt(): ?\DateTimeImmutable
