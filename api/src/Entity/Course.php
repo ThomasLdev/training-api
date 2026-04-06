@@ -2,23 +2,20 @@
 
 namespace App\Entity;
 
+use App\Entity\Enum\Level;
+use App\Entity\Enum\Status;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
+#[ORM\UniqueConstraint(name: 'course_unique_title', columns: ['title'])]
+#[ORM\Index('course_idx', columns: ['uuid', 'title'])]
 #[ORM\Entity]
 class Course implements TimestampableInterface
 {
     use TimestampableTrait;
-    public const string STATUS_DRAFT = 'draft';
-    public const string STATUS_PUBLISHED = 'published';
-    public const string STATUS_ARCHIVED = 'archived';
-
-    public const string LEVEL_BEGINNER = 'beginner';
-    public const string LEVEL_INTERMEDIATE = 'intermediate';
-    public const string LEVEL_ADVANCED = 'advanced';
 
     public const int MAX_LIST_EXCERPT_SIZE = 50;
 
@@ -36,8 +33,8 @@ class Course implements TimestampableInterface
     #[ORM\Column(type: Types::TEXT)]
     private string $description = '';
 
-    #[ORM\Column(length: 20)]
-    private string $level = self::LEVEL_BEGINNER;
+    #[ORM\Column(type: Types::ENUM, enumType: Level::class)]
+    private Level $level = Level::Beginner;
 
     #[ORM\Column]
     private int $priceInCents = 0;
@@ -45,8 +42,8 @@ class Course implements TimestampableInterface
     #[ORM\Column]
     private int $maxStudents = 30;
 
-    #[ORM\Column(length: 20)]
-    private string $status = self::STATUS_DRAFT;
+    #[ORM\Column(type: Types::ENUM, enumType: Status::class)]
+    private Status $status = Status::Draft;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $publishedAt = null;
@@ -113,14 +110,15 @@ class Course implements TimestampableInterface
         return $this;
     }
 
-    public function getLevel(): string
+    public function getLevel(): Level
     {
         return $this->level;
     }
 
-    public function setLevel(string $level): static
+    public function setLevel(Level $level): static
     {
         $this->level = $level;
+
         return $this;
     }
 
@@ -146,14 +144,19 @@ class Course implements TimestampableInterface
         return $this;
     }
 
-    public function getStatus(): string
+    public function getStatus(): Status
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(Status $status): static
     {
         $this->status = $status;
+
+        if (Status::Published === $this->status) {
+            $this->publishedAt = new \DateTimeImmutable();
+        }
+
         return $this;
     }
 
@@ -165,6 +168,7 @@ class Course implements TimestampableInterface
     public function setPublishedAt(?\DateTimeImmutable $publishedAt): static
     {
         $this->publishedAt = $publishedAt;
+
         return $this;
     }
 

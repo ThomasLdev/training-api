@@ -8,7 +8,7 @@ api_platform:
     defaults:
         stateless: true
         cache_headers:
-            vary: ['Content-Type', 'Authorization', 'Origin']
+            vary: ['Content-Type', 'Origin']
             stale_while_revalidate: 60
     name_converter: 'serializer.name_converter.camel_case_to_snake_case'
 

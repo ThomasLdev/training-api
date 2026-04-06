@@ -92,4 +92,8 @@ sub vcl_deliver {
 
     # Le header "Age" est ajouté automatiquement par Varnish.
     # Il indique depuis combien de secondes l'objet est en cache.
+
+    # Cache-Tags est utilisé en interne par Varnish pour l'invalidation BAN.
+    # Le client n'en a pas besoin — on le retire pour réduire la taille des réponses.
+    unset resp.http.Cache-Tags;
 }

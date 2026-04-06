@@ -17,9 +17,6 @@ headers {
 docs {
   Liste paginée des cours.
 
-  Cache headers attendus :
-  - Cache-Control: max-age=60, public, s-maxage=3600
-  - X-Cache: HIT/MISS (Varnish)
-  - Age: secondes en cache
-  - Cache-Tags: IRIs des ressources
+  1er appel : 200 + le script collection sauvegarde l'ETag
+  2ème appel : If-None-Match injecté automatiquement → 304 si inchangé
 }
