@@ -1,0 +1,15 @@
+meta {
+  name: Delete review
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/courses/{{courseUuid}}/reviews/{{reviewUuid}}
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/ld+json
+}

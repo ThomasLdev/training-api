@@ -9,6 +9,7 @@ api_platform:
         stateless: true
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
+            stale_while_revalidate: 60
     name_converter: 'serializer.name_converter.camel_case_to_snake_case'
 
     # Invalidation du cache HTTP via Varnish.

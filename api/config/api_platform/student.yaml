@@ -5,8 +5,12 @@ resources:
          denormalizationContext:
              groups: ['student:write']
          operations:
-             ApiPlatform\Metadata\GetCollection: ~
-             ApiPlatform\Metadata\Get: ~
+             ApiPlatform\Metadata\GetCollection:
+                 cacheHeaders:
+                     max_age: 0
+             ApiPlatform\Metadata\Get:
+                 cacheHeaders:
+                     max_age: 60
              ApiPlatform\Metadata\Post: ~
              ApiPlatform\Metadata\Patch: ~
              ApiPlatform\Metadata\Delete: ~

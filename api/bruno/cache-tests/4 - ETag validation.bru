@@ -1,0 +1,24 @@
+meta {
+  name: 4 - ETag validation
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/courses
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/ld+json
+  If-None-Match: {{etag}}
+}
+
+docs {
+  Test exercice 4 — validation ETag :
+  1. Fais un GET /courses sans If-None-Match, note la valeur du header ETag
+  2. Copie cette valeur dans la variable "etag" de l'environnement
+  3. Exécute cette requête avec If-None-Match
+  4. Observe : 304 Not Modified ou 200 ?
+}

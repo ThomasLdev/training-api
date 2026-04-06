@@ -1,0 +1,15 @@
+meta {
+  name: Delete course
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/courses/{{courseUuid}}
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/ld+json
+}

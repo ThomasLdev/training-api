@@ -1,0 +1,27 @@
+meta {
+  name: Update course
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/courses/{{courseUuid}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+  Accept: application/ld+json
+}
+
+body:json {
+  {
+    "title": "Titre modifié via Bruno"
+  }
+}
+
+docs {
+  Modifie un cours existant.
+  Déclenche un BAN Varnish → le GET /courses et GET /courses/{uuid} passent en MISS.
+}

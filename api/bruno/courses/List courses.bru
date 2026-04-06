@@ -1,0 +1,25 @@
+meta {
+  name: List courses
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/courses
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/ld+json
+}
+
+docs {
+  Liste paginée des cours.
+
+  Cache headers attendus :
+  - Cache-Control: max-age=60, public, s-maxage=3600
+  - X-Cache: HIT/MISS (Varnish)
+  - Age: secondes en cache
+  - Cache-Tags: IRIs des ressources
+}

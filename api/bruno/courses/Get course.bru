@@ -1,0 +1,23 @@
+meta {
+  name: Get course
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/courses/{{courseUuid}}
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/ld+json
+}
+
+docs {
+  Détail d'un cours avec modules embarqués.
+
+  Cache headers attendus :
+  - Cache-Control: max-age=60, public, s-maxage=3600
+  - X-Cache: HIT/MISS (Varnish)
+}

@@ -1,0 +1,27 @@
+meta {
+  name: Update instructor
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/instructors/{{instructorUuid}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+  Accept: application/ld+json
+}
+
+body:json {
+  {
+    "first_name": "Nouveau prénom"
+  }
+}
+
+docs {
+  Modifier un instructeur invalide aussi le cache /courses
+  si cet instructeur est référencé dans les Cache-Tags (exercice 3).
+}

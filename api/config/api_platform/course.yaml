@@ -8,7 +8,13 @@ resources:
              ApiPlatform\Metadata\GetCollection:
                  normalizationContext:
                      groups: ['course:list']
-             ApiPlatform\Metadata\Get: ~
+                 cacheHeaders:
+                     shared_max_age: 3600
+                     max_age: 60
+             ApiPlatform\Metadata\Get:
+                 cacheHeaders:
+                     shared_max_age: 3600
+                     max_age: 60
              ApiPlatform\Metadata\Post: ~
              ApiPlatform\Metadata\Patch: ~
              ApiPlatform\Metadata\Delete: ~

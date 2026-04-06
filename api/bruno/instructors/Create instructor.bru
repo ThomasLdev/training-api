@@ -1,0 +1,25 @@
+meta {
+  name: Create instructor
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/instructors
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/ld+json
+  Accept: application/ld+json
+}
+
+body:json {
+  {
+    "first_name": "Marie",
+    "last_name": "Dupont",
+    "bio": "Experte Symfony depuis 10 ans",
+    "specialty": "Backend PHP"
+  }
+}

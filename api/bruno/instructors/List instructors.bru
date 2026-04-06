@@ -1,0 +1,15 @@
+meta {
+  name: List instructors
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/instructors
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/ld+json
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Create review
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/courses/{{courseUuid}}/reviews
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/ld+json
+  Accept: application/ld+json
+}
+
+body:json {
+  {
+    "rating": 5,
+    "comment": "Excellent cours, très bien expliqué !",
+    "student": "/students/{{studentUuid}}"
+  }
+}

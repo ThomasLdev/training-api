@@ -1,0 +1,32 @@
+meta {
+  name: 3 - Cross invalidation instructor
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/instructors/{{instructorUuid}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+  Accept: application/ld+json
+}
+
+body:json {
+  {
+    "first_name": "Cross invalidation test"
+  }
+}
+
+docs {
+  Test exercice 3 — invalidation croisée :
+  1. GET /courses 2 fois → vérifie le HIT
+  2. Exécute cette requête (PATCH un instructeur, pas un cours)
+  3. GET /courses → HIT ou MISS ?
+
+  Réponse : MISS, car les Cache-Tags de /courses contiennent
+  les IRIs des instructeurs embarqués.
+}

@@ -1,0 +1,22 @@
+meta {
+  name: 1 - Cache MISS then HIT
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/courses
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/ld+json
+}
+
+docs {
+  Exécute cette requête 2 fois de suite.
+
+  1ère fois : X-Cache: MISS (Varnish demande à PHP)
+  2ème fois : X-Cache: HIT + Age > 0 (Varnish sert directement)
+}
