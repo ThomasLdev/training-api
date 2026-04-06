@@ -31,8 +31,6 @@ security:
     access_control:
         - { path: ^/auth/token, roles: PUBLIC_ACCESS }
         - { path: ^/docs, roles: PUBLIC_ACCESS }
-        # Les GET publics restent accessibles sans auth
-        # Les POST/PATCH/DELETE seront protégés par resource via security expressions
 
 when@dev:
     security:

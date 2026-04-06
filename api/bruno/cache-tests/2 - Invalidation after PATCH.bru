@@ -22,8 +22,8 @@ body:json {
 }
 
 docs {
-  Scénario d'invalidation :
-  1. Exécute "1 - Cache MISS then HIT" 2 fois → vérifie le HIT
-  2. Exécute cette requête (PATCH)
-  3. Re-exécute "1 - Cache MISS then HIT" → devrait être MISS (cache purgé par BAN)
+  Invalidation scenario:
+  1. Run "1 - Cache MISS then HIT" 2 times → verify the HIT
+  2. Run this request (PATCH)
+  3. Re-run "1 - Cache MISS then HIT" → should be MISS (cache purged by BAN)
 }

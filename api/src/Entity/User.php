@@ -36,6 +36,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Timesta
     #[ORM\Column]
     private string $password = '';
 
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Student::class)]
+    private ?Student $student = null;
+
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Instructor::class)]
+    private ?Instructor $instructor = null;
+
     public function __construct()
     {
         $this->uuid = Uuid::v7();
@@ -95,6 +101,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Timesta
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getStudent(): ?Student
+    {
+        return $this->student;
+    }
+
+    public function getInstructor(): ?Instructor
+    {
+        return $this->instructor;
     }
 
     public function eraseCredentials(): void

@@ -1,0 +1,12 @@
+App\Entity\User:
+    attributes:
+        uuid:
+            groups: ['me:read']
+        email:
+            groups: ['me:read']
+        roles:
+            groups: ['me:read']
+        student:
+            groups: ['me:read']
+        instructor:
+            groups: ['me:read']

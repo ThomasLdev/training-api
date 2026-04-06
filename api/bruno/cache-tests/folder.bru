@@ -1,0 +1,25 @@
+meta {
+  name: cache-tests
+}
+
+script:pre-request {
+  if (req.getMethod() === 'GET') {
+    const url = bru.interpolate(req.getUrl());
+    const key = 'etag_' + url.replace(/[^a-zA-Z0-9]/g, '_');
+    const etag = bru.getVar(key);
+    if (etag) {
+      req.setHeader('If-None-Match', etag);
+    }
+  }
+}
+
+script:post-response {
+  if (req.getMethod() === 'GET') {
+    const etag = res.headers['etag'];
+    if (etag) {
+      const url = req.getUrl();
+      const key = 'etag_' + url.replace(/[^a-zA-Z0-9]/g, '_');
+      bru.setVar(key, etag);
+    }
+  }
+}

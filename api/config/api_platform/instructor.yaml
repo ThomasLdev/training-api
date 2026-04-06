@@ -10,6 +10,7 @@ resources:
                      shared_max_age: 3600
                      max_age: 120
              ApiPlatform\Metadata\Get:
+                 provider: App\State\CachedItemProvider
                  cacheHeaders:
                      shared_max_age: 3600
                      max_age: 120

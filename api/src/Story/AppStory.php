@@ -25,13 +25,26 @@ final class AppStory extends Story
 {
     public function build(): void
     {
-        // 10 instructeurs + admin (password: "password")
+        // Known accounts (password: "password")
         /** @var list<Instructor> $instructors */
         $instructors = flush_after(function (): array {
             UserFactory::createOne(['email' => 'admin@training.local', 'roles' => ['ROLE_ADMIN']]);
 
-            return InstructorFactory::createMany(10);
+            $instructors = InstructorFactory::createMany(10);
+
+            // Instructeur connu pour les tests
+            $instructors[] = InstructorFactory::createOne([
+                'user' => UserFactory::new()->instructor()->with(['email' => 'instructor@training.local']),
+                'firstName' => 'Marie',
+                'lastName' => 'Dupont',
+                'specialty' => 'PHP & Symfony',
+            ]);
+
+            return $instructors;
         });
+
+        // Student connu pour les tests
+        $knownStudent = null;
 
         /** @var list<Course> $publishedCourses */
         $publishedCourses = flush_after(fn (): array => CourseFactory::createMany(30, fn (): array => [
@@ -47,7 +60,7 @@ final class AppStory extends Story
             }
         });
 
-        // 3-6 modules par cours publié
+        // 3-6 modules per published course
         flush_after(function () use ($publishedCourses): void {
             foreach ($publishedCourses as $course) {
                 $moduleCount = faker()->numberBetween(3, 6);
@@ -60,11 +73,23 @@ final class AppStory extends Story
             }
         });
 
-        // 100 étudiants
+        // 100 students + 1 known
         /** @var list<Student> $students */
-        $students = flush_after(fn (): array => StudentFactory::createMany(100));
+        $students = flush_after(function () use (&$knownStudent): array {
+            $students = StudentFactory::createMany(100);
 
-        // Chaque étudiant inscrit à 1-4 cours
+            $knownStudent = StudentFactory::createOne([
+                'user' => UserFactory::new()->student()->with(['email' => 'student@training.local']),
+                'firstName' => 'Jean',
+                'lastName' => 'Martin',
+                'email' => 'student@training.local',
+            ]);
+            $students[] = $knownStudent;
+
+            return $students;
+        });
+
+        // Each student enrolled in 1-4 courses
         /** @var array<string, true> $usedPairs */
         $usedPairs = [];
         flush_after(function () use ($students, $publishedCourses, &$usedPairs): void {
@@ -90,7 +115,7 @@ final class AppStory extends Story
             }
         });
 
-        // Reviews : étudiants à 50%+ laissent un avis (60% de chance)
+        // Reviews: students with 50%+ progress leave a review (60% chance)
         /** @var array<string, true> $reviewedPairs */
         $reviewedPairs = [];
         flush_after(function () use ($students, &$reviewedPairs): void {

@@ -19,7 +19,7 @@ class Student implements TimestampableInterface
     #[ORM\Column(type: 'uuid', unique: true)]
     private Uuid $uuid;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'student')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 

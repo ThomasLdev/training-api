@@ -15,10 +15,10 @@ headers {
 }
 
 docs {
-  Test exercice 6 — Vary header :
-  1. GET /courses avec Accept: application/ld+json → MISS puis HIT
-  2. GET /courses avec Accept: application/json (cette requête) → MISS ou HIT ?
+  Exercise 6 test — Vary header:
+  1. GET /courses with Accept: application/ld+json → MISS then HIT
+  2. GET /courses with Accept: application/json (this request) → MISS or HIT?
 
-  Varnish stocke des variantes séparées par header Vary (ici Accept).
-  Même URL, format différent = entrée de cache différente.
+  Varnish stores separate variants by Vary header (here Accept).
+  Same URL, different format = different cache entry.
 }

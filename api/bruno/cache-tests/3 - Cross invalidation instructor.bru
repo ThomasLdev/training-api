@@ -22,11 +22,11 @@ body:json {
 }
 
 docs {
-  Test exercice 3 — invalidation croisée :
-  1. GET /courses 2 fois → vérifie le HIT
-  2. Exécute cette requête (PATCH un instructeur, pas un cours)
-  3. GET /courses → HIT ou MISS ?
+  Exercise 3 test — cross invalidation:
+  1. GET /courses 2 times → verify the HIT
+  2. Run this request (PATCH an instructor, not a course)
+  3. GET /courses → HIT or MISS?
 
-  Réponse : MISS, car les Cache-Tags de /courses contiennent
-  les IRIs des instructeurs embarqués.
+  Answer: MISS, because the Cache-Tags of /courses contain
+  the IRIs of embedded instructors.
 }
