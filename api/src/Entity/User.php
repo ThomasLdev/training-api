@@ -57,6 +57,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Timesta
         return $this->uuid;
     }
 
+    public function setUuid(Uuid $uuid): static
+    {
+        $this->uuid = $uuid;
+
+        return $this;
+    }
+
     public function getEmail(): string
     {
         return $this->email;

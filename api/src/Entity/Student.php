@@ -69,6 +69,13 @@ class Student implements TimestampableInterface
         return $this->uuid;
     }
 
+    public function setUuid(Uuid $uuid): static
+    {
+        $this->uuid = $uuid;
+
+        return $this;
+    }
+
     public function getFirstName(): string
     {
         return $this->firstName;

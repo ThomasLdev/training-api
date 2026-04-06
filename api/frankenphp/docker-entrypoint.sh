@@ -37,8 +37,12 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		fi
 	fi
 
-	setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var
-	setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var
+	if [ "$(id -u)" = '0' ]; then
+		setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var
+		setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var
+	else
+		mkdir -p var/cache var/log
+	fi
 
 	echo 'PHP app ready!'
 fi

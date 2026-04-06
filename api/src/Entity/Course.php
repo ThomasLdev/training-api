@@ -88,6 +88,13 @@ class Course implements TimestampableInterface
         return $this->uuid;
     }
 
+    public function setUuid(Uuid $uuid): static
+    {
+        $this->uuid = $uuid;
+
+        return $this;
+    }
+
     public function getTitle(): string
     {
         return $this->title;

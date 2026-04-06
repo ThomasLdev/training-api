@@ -61,6 +61,13 @@ class Enrollment implements TimestampableInterface
         return $this->uuid;
     }
 
+    public function setUuid(Uuid $uuid): static
+    {
+        $this->uuid = $uuid;
+
+        return $this;
+    }
+
     public function getStudent(): ?Student
     {
         return $this->student;

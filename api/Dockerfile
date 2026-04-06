@@ -63,7 +63,7 @@ FROM frankenphp_base AS frankenphp_dev
 ENV APP_ENV=dev
 ENV XDEBUG_MODE=off
 ENV FRANKENPHP_WORKER_CONFIG=watch
-VOLUME /app/var/
+RUN mkdir -p /app/var /data/caddy /config/caddy && chmod -R 777 /app/var /data /config
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 

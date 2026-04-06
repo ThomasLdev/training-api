@@ -14,6 +14,7 @@ use App\Factory\ModuleFactory;
 use App\Factory\ReviewFactory;
 use App\Factory\StudentFactory;
 use App\Factory\UserFactory;
+use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\Attribute\AsFixture;
 use Zenstruck\Foundry\Story;
 
@@ -23,6 +24,13 @@ use function Zenstruck\Foundry\Persistence\flush_after;
 #[AsFixture(name: 'main')]
 final class AppStory extends Story
 {
+    // Stable UUIDs for test entities — never change between fixture reloads
+    public const string INSTRUCTOR_UUID = '00000000-0000-7000-a000-000000000001';
+    public const string STUDENT_UUID = '00000000-0000-7000-a000-000000000002';
+    public const string COURSE_UUID = '00000000-0000-7000-a000-000000000003';
+    public const string ENROLLMENT_UUID = '00000000-0000-7000-a000-000000000004';
+    public const string REVIEW_UUID = '00000000-0000-7000-a000-000000000005';
+
     public function build(): void
     {
         // Known accounts (password: "password")
@@ -32,8 +40,8 @@ final class AppStory extends Story
 
             $instructors = InstructorFactory::createMany(10);
 
-            // Instructeur connu pour les tests
             $instructors[] = InstructorFactory::createOne([
+                'uuid' => Uuid::fromString(self::INSTRUCTOR_UUID),
                 'user' => UserFactory::new()->instructor()->with(['email' => 'instructor@training.local']),
                 'firstName' => 'Marie',
                 'lastName' => 'Dupont',
@@ -43,13 +51,19 @@ final class AppStory extends Story
             return $instructors;
         });
 
-        // Student connu pour les tests
-        $knownStudent = null;
-
         /** @var list<Course> $publishedCourses */
-        $publishedCourses = flush_after(fn (): array => CourseFactory::createMany(30, fn (): array => [
-            'instructor' => faker()->randomElement($instructors),
-        ]));
+        $publishedCourses = flush_after(function () use ($instructors): array {
+            $courses = CourseFactory::createMany(29, fn (): array => [
+                'instructor' => faker()->randomElement($instructors),
+            ]);
+
+            $courses[] = CourseFactory::createOne([
+                'uuid' => Uuid::fromString(self::COURSE_UUID),
+                'instructor' => $instructors[array_key_last($instructors)],
+            ]);
+
+            return $courses;
+        });
 
         flush_after(function () use ($instructors): void {
             foreach (faker()->randomElements($instructors, 5) as $instructor) {
@@ -74,11 +88,14 @@ final class AppStory extends Story
         });
 
         // 100 students + 1 known
+        $knownCourse = $publishedCourses[array_key_last($publishedCourses)];
+
         /** @var list<Student> $students */
-        $students = flush_after(function () use (&$knownStudent): array {
+        $students = flush_after(function () use ($knownCourse, &$knownStudent): array {
             $students = StudentFactory::createMany(100);
 
             $knownStudent = StudentFactory::createOne([
+                'uuid' => Uuid::fromString(self::STUDENT_UUID),
                 'user' => UserFactory::new()->student()->with(['email' => 'student@training.local']),
                 'firstName' => 'Jean',
                 'lastName' => 'Martin',
@@ -89,9 +106,26 @@ final class AppStory extends Story
             return $students;
         });
 
+        // Enroll known student in known course with stable UUID
+        flush_after(function () use ($knownStudent, $knownCourse): void {
+            EnrollmentFactory::createOne([
+                'uuid' => Uuid::fromString(self::ENROLLMENT_UUID),
+                'student' => $knownStudent,
+                'course' => $knownCourse,
+                'paidPriceInCents' => $knownCourse->getPriceInCents(),
+                'progressPercent' => 75,
+            ]);
+
+            ReviewFactory::createOne([
+                'uuid' => Uuid::fromString(self::REVIEW_UUID),
+                'student' => $knownStudent,
+                'course' => $knownCourse,
+            ]);
+        });
+
         // Each student enrolled in 1-4 courses
         /** @var array<string, true> $usedPairs */
-        $usedPairs = [];
+        $usedPairs = [$knownStudent->getId() . '-' . $knownCourse->getId() => true];
         flush_after(function () use ($students, $publishedCourses, &$usedPairs): void {
             /** @var Student $student */
             foreach ($students as $student) {
@@ -117,7 +151,7 @@ final class AppStory extends Story
 
         // Reviews: students with 50%+ progress leave a review (60% chance)
         /** @var array<string, true> $reviewedPairs */
-        $reviewedPairs = [];
+        $reviewedPairs = [$knownStudent->getId() . '-' . $knownCourse->getId() => true];
         flush_after(function () use ($students, &$reviewedPairs): void {
             /** @var Student $student */
             foreach ($students as $student) {
