@@ -22,11 +22,6 @@ services:
 
     Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter: ~
 
-    App\State\CachedItemProvider:
-        arguments:
-            $decorated: '@api_platform.doctrine.orm.state.item_provider'
-            $cache: '@cache.app'
-
 when@dev:
     services:
         App\EventListener\NotModifiedListener:

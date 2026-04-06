@@ -7,13 +7,13 @@ App\Entity\Course:
             - NotBlank: ~
         level:
             - Choice:
-                choices: [beginner, intermediate, advanced]
+                callback: [App\Entity\Enum\Level, cases]
         priceInCents:
             - PositiveOrZero: ~
         maxStudents:
             - Positive: ~
         status:
             - Choice:
-                choices: [draft, published, archived]
+                callback: [App\Entity\Enum\Status, cases]
         instructor:
             - NotNull: ~

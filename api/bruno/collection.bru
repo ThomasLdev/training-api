@@ -1,5 +1,8 @@
 script:pre-request {
-  // Auto-inject JWT si disponible (sauf sur /auth/token)
+  // Xdebug trigger for PhpStorm
+  req.setHeader('Cookie', 'XDEBUG_SESSION=PHPSTORM');
+
+  // Auto-inject JWT
   const jwt = bru.getVar('jwt');
   if (jwt && !req.getUrl().includes('/auth/token')) {
     req.setHeader('Authorization', 'Bearer ' + jwt);

@@ -1,0 +1,38 @@
+meta {
+  name: Create course (idempotent)
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/courses
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/ld+json
+  Accept: application/ld+json
+  Idempotency-Key: post_course_fixed_key
+}
+
+body:json {
+  {
+    "title": "Idempotency test course",
+    "description": "Testing idempotent POST",
+    "level": "beginner",
+    "price_in_cents": 4990,
+    "max_students": 25,
+    "instructor": "/instructors/{{instructorUuid}}"
+  }
+}
+
+docs {
+  Test idempotent POST.
+  
+  1st call: 201 Created (persists + stores response in Redis)
+  2nd call: 201 Created (same response from Redis, no DB write)
+  
+  The Idempotency-Key is fixed so you can send multiple times.
+  Change it to test a fresh POST.
+}

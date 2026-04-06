@@ -31,6 +31,23 @@ fixtures-reload: ## Purge database + load fixtures from scratch
 cc: ## Clear Symfony cache
 	$(CONSOLE) cache:clear
 
+## —— Redis ——————————————————————————————————————
+
+redis-cli: ## Open a Redis CLI session
+	$(DC) exec redis redis-cli
+
+redis-keys: ## List all Redis keys
+	$(DC) exec redis redis-cli KEYS '*'
+
+redis-get: ## Get a Redis key value (usage: make redis-get KEY=mykey)
+	$(DC) exec redis redis-cli GET $(KEY)
+
+redis-flush: ## Flush all Redis data
+	$(DC) exec redis redis-cli FLUSHALL
+
+redis-monitor: ## Watch Redis commands in real-time
+	$(DC) exec redis redis-cli MONITOR
+
 ## —— Quality —————————————————————————————————————
 
 phpstan: ## Run PHPStan (level max)
