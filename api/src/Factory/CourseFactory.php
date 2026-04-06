@@ -3,6 +3,8 @@
 namespace App\Factory;
 
 use App\Entity\Course;
+use App\Entity\Enum\Level;
+use App\Entity\Enum\Status;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 use function Zenstruck\Foundry\lazy;
@@ -49,16 +51,12 @@ final class CourseFactory extends PersistentObjectFactory
             'title' => sprintf(
                 self::FORMATS[array_rand(self::FORMATS)],
                 self::SUBJECTS[array_rand(self::SUBJECTS)],
-            ),
+            ) . ' — vol. ' . self::faker()->unique()->numberBetween(1, 9999),
             'description' => self::faker()->paragraphs(3, true),
-            'level' => self::faker()->randomElement([
-                Course::LEVEL_BEGINNER,
-                Course::LEVEL_INTERMEDIATE,
-                Course::LEVEL_ADVANCED,
-            ]),
+            'level' => self::faker()->randomElement(Level::cases()),
             'priceInCents' => self::faker()->randomElement([0, 1990, 2990, 4990, 7990, 9990, 14990]),
             'maxStudents' => self::faker()->numberBetween(10, 50),
-            'status' => Course::STATUS_PUBLISHED,
+            'status' => Status::Published,
             'publishedAt' => \DateTimeImmutable::createFromMutable(
                 self::faker()->dateTimeBetween('-1 year', '-1 month'),
             ),
@@ -69,7 +67,7 @@ final class CourseFactory extends PersistentObjectFactory
     public function draft(): static
     {
         return $this->with([
-            'status' => Course::STATUS_DRAFT,
+            'status' => Status::Draft,
             'publishedAt' => null,
         ]);
     }
@@ -77,7 +75,7 @@ final class CourseFactory extends PersistentObjectFactory
     public function archived(): static
     {
         return $this->with([
-            'status' => Course::STATUS_ARCHIVED,
+            'status' => Status::Archived,
         ]);
     }
 

@@ -11,10 +11,12 @@ resources:
                  cacheHeaders:
                      shared_max_age: 3600
                      max_age: 60
+                     stale_while_revalidate: 60
              ApiPlatform\Metadata\Get:
                  cacheHeaders:
                      shared_max_age: 3600
                      max_age: 60
+                     stale_while_revalidate: 60
              ApiPlatform\Metadata\Post: ~
              ApiPlatform\Metadata\Patch: ~
              ApiPlatform\Metadata\Delete: ~

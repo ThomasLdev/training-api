@@ -39,6 +39,7 @@ final class InstructorFactory extends PersistentObjectFactory
     protected function defaults(): array
     {
         return [
+            'user' => UserFactory::new()->instructor(),
             'firstName' => self::faker()->firstName(),
             'lastName' => self::faker()->lastName(),
             'bio' => self::faker()->paragraphs(2, true),

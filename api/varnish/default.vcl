@@ -17,12 +17,6 @@ acl invalidators {
 # Appelé à chaque requête entrante
 sub vcl_recv {
     # ── Invalidation (BAN) ──────────────────────────────────────
-    # API Platform envoie des requêtes BAN quand une ressource est modifiée.
-    # Le header "ApiPlatform-Ban-Regex" contient une regex des IRIs à purger.
-    # Ex: après PATCH /courses/abc, API Platform envoie:
-    #   BAN / HTTP/1.1
-    #   ApiPlatform-Ban-Regex: (^/courses/abc$)|(^/courses$)
-    # Varnish supprime alors du cache toutes les réponses qui matchent.
     if (req.method == "BAN") {
         if (!client.ip ~ invalidators) {
             return (synth(405, "Not allowed"));
@@ -37,9 +31,6 @@ sub vcl_recv {
     }
 
     # ── Forwarding headers ──────────────────────────────────────
-    # Varnish parle HTTP à Caddy. Caddy écoute en HTTP sur "php:80".
-    # On sauvegarde le vrai Host pour que Symfony le connaisse via X-Forwarded-Host,
-    # puis on met Host = "php" pour matcher le listener HTTP de Caddy.
     set req.http.X-Forwarded-Host = req.http.Host;
     set req.http.X-Forwarded-Proto = "http";
     set req.http.Host = "php";
@@ -50,39 +41,46 @@ sub vcl_recv {
         return (pass);
     }
 
-    # Si la requête a un header Authorization, on ne cache pas (cache privé)
+    # On sauvegarde Authorization pour le backend, puis on le retire du hash.
+    # Comme ça les resources publiques (s-maxage) sont partagées entre tous les users.
+    # Les resources privées ne seront pas cachées (vcl_backend_response respecte "private").
     if (req.http.Authorization) {
-        return (pass);
+        set req.http.X-Saved-Authorization = req.http.Authorization;
+        unset req.http.Authorization;
     }
 
-    # On supprime les cookies pour permettre le cache des requêtes GET publiques.
-    # Les cookies du profiler Symfony (debug) empêcheraient sinon tout caching.
     unset req.http.Cookie;
 
-    # On cherche dans le cache
     return (hash);
+}
+
+# Appelé avant d'envoyer la requête au backend (MISS)
+sub vcl_backend_fetch {
+    if (bereq.http.X-Saved-Authorization) {
+        set bereq.http.Authorization = bereq.http.X-Saved-Authorization;
+        unset bereq.http.X-Saved-Authorization;
+    }
 }
 
 # Appelé quand Varnish reçoit la réponse du backend
 sub vcl_backend_response {
-    # Si le backend dit "ne pas cacher" (private, no-store), on obéit
-    if (beresp.http.Cache-Control ~ "private" || beresp.http.Cache-Control ~ "no-store") {
+    if (beresp.http.Cache-Control ~ "no-store") {
         set beresp.uncacheable = true;
         set beresp.ttl = 0s;
         return (deliver);
     }
 
-    # On supprime les Set-Cookie des réponses cacheables.
-    # Le profiler Symfony envoie des cookies de debug qu'on ne veut pas en cache.
-    unset beresp.http.Set-Cookie;
+    if (beresp.http.Cache-Control ~ "private") {
+        set beresp.uncacheable = true;
+        set beresp.ttl = 0s;
+        return (deliver);
+    }
 
-    # Varnish utilise automatiquement s-maxage du header Cache-Control
-    # pour déterminer combien de temps garder la réponse en cache.
+    unset beresp.http.Set-Cookie;
 }
 
 # Appelé juste avant d'envoyer la réponse au client
 sub vcl_deliver {
-    # Headers de debug : permet de voir si c'est un HIT ou un MISS
     if (obj.hits > 0) {
         set resp.http.X-Cache = "HIT";
         set resp.http.X-Cache-Hits = obj.hits;
@@ -90,10 +88,5 @@ sub vcl_deliver {
         set resp.http.X-Cache = "MISS";
     }
 
-    # Le header "Age" est ajouté automatiquement par Varnish.
-    # Il indique depuis combien de secondes l'objet est en cache.
-
-    # Cache-Tags est utilisé en interne par Varnish pour l'invalidation BAN.
-    # Le client n'en a pas besoin — on le retire pour réduire la taille des réponses.
     unset resp.http.Cache-Tags;
 }

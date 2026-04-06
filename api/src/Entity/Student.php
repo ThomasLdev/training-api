@@ -19,6 +19,10 @@ class Student implements TimestampableInterface
     #[ORM\Column(type: 'uuid', unique: true)]
     private Uuid $uuid;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
     #[ORM\Column(length: 255)]
     private string $firstName = '';
 
@@ -46,6 +50,18 @@ class Student implements TimestampableInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
     public function getUuid(): Uuid
